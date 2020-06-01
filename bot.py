@@ -33,4 +33,17 @@ async def look_to_fight(ctx):
         
     await ctx.send(response)
 
+@bot.command(name='leave', help='Leaves the queue')
+async def look_to_fight(ctx):
+    if ctx.message.author.mention in lfg_fightqueue:
+        
+        queuedmessage = "Thanks {}, you have been removed from.".format(lfg_fightqueue[0])
+        lfg_fightqueue.remove(ctx.message.author.mention)
+        response = queuedmessage
+    else:
+        fightmessage = "Quit yo fooling around, you ain't in this queue"
+        response = fightmessage
+        
+    await ctx.send(response)
+
 bot.run(TOKEN)
