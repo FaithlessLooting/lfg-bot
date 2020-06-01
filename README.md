@@ -5,7 +5,7 @@ discord bot for organising games of MTG via discord servers
 
 ## Usage
 !lfg to join the queue
-Leave queue function coming soon
+!leave to leave
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
