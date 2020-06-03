@@ -24,7 +24,7 @@ bot = commands.Bot(command_prefix='!')
 lfg_fightqueue = []
 lfg_leaguequeue = []
 current_fights = []
-@bot.command(name='lfg', help='Adds you too the fight queue')
+@bot.command(name='lfg', help='Adds you o the fight queue')
 async def look_to_fight(ctx):
     if not lfg_fightqueue:
         lfg_fightqueue.append(ctx.message.author.mention)
@@ -35,25 +35,25 @@ async def look_to_fight(ctx):
         fightmessage = "{} and {}... FIGHT.".format(lfg_fightqueue[0], lfg_fightqueue[1])
         response = fightmessage
         lfg_fightqueue.clear()
-        
+
     await ctx.send(response)
 
 @bot.command(name='leave', help='Leaves the queue')
 async def leave_fight(ctx):
     if ctx.message.author.mention in lfg_fightqueue:
-        
+
         queuedmessage = "Thanks {}, you have been removed from.".format(lfg_fightqueue[0])
         lfg_fightqueue.remove(ctx.message.author.mention)
         response = queuedmessage
     else:
         fightmessage = "Quit yo fooling around, you ain't in this queue"
         response = fightmessage
-        
+
     await ctx.send(response)
-    
+
 @bot.command(name='joinleague', help='Joins Monthly League')
 async def joinleague(ctx):
-        conn = sqlite3.connect('lfgbot.db')  
+        conn = sqlite3.connect('lfgbot.db')
         c = conn.cursor()
         author=ctx.message.author.mention
         author = re.sub('[<>]', '', author)
@@ -77,7 +77,7 @@ async def joinleague(ctx):
 
 @bot.command(name='leaguequeue', help='Joins Monthly League queue')
 async def joinleaguequeue(ctx):
-    conn = sqlite3.connect('lfgbot.db')  
+    conn = sqlite3.connect('lfgbot.db')
     c = conn.cursor()
     author=ctx.message.author.mention
     authorid=ctx.message.author.id
@@ -104,7 +104,7 @@ async def joinleaguequeue(ctx):
 @bot.command(name='winner', help='reports league winner')
 async def winner(ctx):
     if current_fights:
-        conn = sqlite3.connect('lfgbot.db')  
+        conn = sqlite3.connect('lfgbot.db')
         c = conn.cursor()
         author=ctx.message.author.mention
         authorid=ctx.message.author.id
@@ -124,7 +124,7 @@ async def winner(ctx):
                 NewScore = str(NewScore)
                 print(NewScore)
                 print(authorid)
-                conn = sqlite3.connect('lfgbot.db')  
+                conn = sqlite3.connect('lfgbot.db')
                 c = conn.cursor()
                 c.execute("UPDATE users SET Score = "+NewScore+" WHERE User_ID = "+authorid)
                 conn.commit()
@@ -139,5 +139,5 @@ async def winner(ctx):
          queuedmessage = "Error: Queue Empty"
          response = queuedmessage
     await ctx.send(response)
-                
+
 bot.run(TOKEN)
