@@ -49,24 +49,6 @@ async def leave_fight(ctx):
         
     await ctx.send(response)
     
-def add_user(conn, user):
-    """
-    Create a new task
-    :param conn:
-    :param task:
-    :return:
-    """
-
-    sql = ''' INSERT INTO USERS(User_ID,User_Name,Score)
-              VALUES(?,?,?) '''
-    conn = sqlite3.connect('lfgbot.db')
-    print(user)
-    print(sql)
-    c = conn.cursor()
-    c.execute(sql, user)
-    return c.lastrowid
-
-
 @bot.command(name='joinleague', help='Joins Monthly League')
 async def joinleague(ctx):
         conn = sqlite3.connect('lfgbot.db')  
@@ -91,6 +73,18 @@ async def joinleague(ctx):
         response = queuedmessage
         await ctx.send(response)
 
+@bot.command(name='leaguequeue', help='Joins Monthly League queue')
+async def joinleaguequeue(ctx):
+    conn = sqlite3.connect('lfgbot.db')  
+    c = conn.cursor()
+    author=ctx.message.author.mention
+    authorid=ctx.message.author.id
+    authorid=str(authorid)
+    author=str(author)
+    c.execute("select User_ID, User_Name, Score from users where User_ID = '"+authorid+"'")
 
-
+    for row in c.fetchall():
+        User_ID, User_Name, Score = row
+        print('{} {} {}'.format(
+            User_ID, User_Name, Score))
 bot.run(TOKEN)
