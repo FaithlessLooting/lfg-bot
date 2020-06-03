@@ -205,4 +205,27 @@ async def leagueleave(ctx):
         response = fightmessage
 
     await ctx.send(response)
+@bot.command(name='standings', help='Shows Standings')
+async def standings(ctx):
+    queuedmessage = ""
+    conn = sqlite3.connect('lfgbot.db')
+    c = conn.cursor()
+    c.execute("select * from users order by Score desc")
+    count=0
+    currentstandings = []
+    for row in c.fetchall():
+        User_ID, User_Name, Score = row
+        print('{} {} {}'.format(
+            User_ID, User_Name, Score))
+        pos = count+1
+        pos = str(pos)
+        Score = str(Score)
+        currentstandings.append(pos+" <"+User_Name+"> "+Score+"pts\n")
+        count=count+1
+    count=0
+    for i in currentstandings:
+        queuedmessage = queuedmessage + currentstandings[count]
+        count=count+1
+    response = queuedmessage
+    await ctx.send(response)
 bot.run(TOKEN)
