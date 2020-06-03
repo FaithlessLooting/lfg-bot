@@ -139,5 +139,57 @@ async def winner(ctx):
          queuedmessage = "Error: Queue Empty"
          response = queuedmessage
     await ctx.send(response)
-
+@bot.command(name='draw', help='reports league draw')
+async def draw(ctx):
+    if current_fights:
+        conn = sqlite3.connect('lfgbot.db')
+        c = conn.cursor()
+        author=ctx.message.author.mention
+        authorid=ctx.message.author.id
+        authorid=str(authorid)
+        author=str(author)
+        c.execute("select User_ID, User_Name, Score from users where User_ID = '"+authorid+"'")
+        for row in c.fetchall():
+            User_ID, User_Name, Score = row
+            print('{} {} {}'.format(
+                User_ID, User_Name, Score))
+            OldScore = Score
+            print(OldScore)
+        c.close()
+        for i in current_fights:
+            if authorid in i:
+                NewScore= OldScore+1
+                NewScore = str(NewScore)
+                print(NewScore)
+                print(authorid)
+                player2= i.split("-",1)[1]
+                player2 = re.sub('[<@>]', '', player2)
+                conn = sqlite3.connect('lfgbot.db')
+                c = conn.cursor()
+                c.execute("select User_ID, User_Name, Score from users where User_ID = '" + player2 + "'")
+                for row in c.fetchall():
+                    User_ID, User_Name, Score = row
+                    print('{} {} {}'.format(
+                        User_ID, User_Name, Score))
+                    Player2OldScore = Score
+                    print(Player2OldScore)
+                c.close()
+                Player2NewScore= Player2OldScore+1
+                print(player2)
+                conn = sqlite3.connect('lfgbot.db')
+                c = conn.cursor()
+                c.execute("UPDATE users SET Score = "+NewScore+" WHERE User_ID = "+authorid)
+                c.execute("UPDATE users SET Score = " + NewScore + " WHERE User_ID = " + player2)
+                conn.commit()
+                current_fights.remove(i)
+                c.close()
+                queuedmessage = "Thanks {}, your result has been confirmed.".format(ctx.message.author.mention)
+                response = queuedmessage
+            else:
+                queuedmessage = "Sorry {}, no matches found for you.".format(ctx.message.author.mention)
+                response = queuedmessage
+    else:
+         queuedmessage = "Error: Queue Empty"
+         response = queuedmessage
+    await ctx.send(response)
 bot.run(TOKEN)
